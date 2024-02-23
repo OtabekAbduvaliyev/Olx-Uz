@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+}
+a{
+    text-decoration: none;
+}
+.pro-detail{
+   position: absolute;
+   z-index: 1;
+   background-color: #e8e8e8;
+   align-items: center;
+   width: 100%;
+}
+@media (max-width:866px) {
+    nav button, .for-d-none{
+        display: none;
+    }
+    .catagory{
+        justify-content: center;
+    }
+}
+@media (max-width:420px) {
+    .nav-user-like{
+        gap: 20px;
+    }
+}
