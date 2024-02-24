@@ -20,6 +20,8 @@ import discountimg from '../assets/images/otdam-darom-1151-1x.png'
 import exchangeimg from '../assets/images/obmen-barter-1153-1x.png'
 import { v4 } from 'uuid';
 import Aos from 'aos';
+import { message } from 'antd';
+import useMessage from 'antd/es/message/useMessage';
 export const Home = () => {
     useEffect(() => {
         Aos.init()
@@ -65,9 +67,16 @@ export const Home = () => {
         const storedLikedProducts = localStorage.getItem('likedProducts');
         return storedLikedProducts ? JSON.parse(storedLikedProducts) : [];
     });
+    const [messageApi, contextHolder] = message.useMessage()
     const addToLikedProducts = (product) => {
         setLikedProducts([...likedProducts, product]);
-    };
+        success = () => {
+            messageApi.open({
+              type: 'success',
+              content: 'This is a success message',
+            });
+          };
+    }
 
     const removeFromLikedProducts = (index) => {
         const updatedLikedProducts = [...likedProducts];
@@ -88,6 +97,7 @@ export const Home = () => {
     }, [])
     return (
         <div className='bg-[#f2f4f5]'>
+            {/* {contextHolder} */}
             <div className='pb-[30px] pt-[1px]'>
                 <div className="search-input text-center mt-[60px]">
                     <div class="input-group mb-3 m-auto max-w-[1200px]">
