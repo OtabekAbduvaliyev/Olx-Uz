@@ -8,6 +8,7 @@ import { FaUser } from "react-icons/fa";
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
 import Home from './components/Home';
+import { useEffect } from 'react';
 import { Signup } from './components/Signup';
 import { SignIn } from './components/Signin';
 import Profile from './components/Profile';
@@ -30,7 +31,12 @@ import Services from './components/catagories/Services';
 import SportItems from './components/catagories/SportItems';
 import Transports from './components/catagories/Transports';
 import Search from './components/Search';
+import Aos from 'aos';
+import 'aos/dist/aos.css'
 function App() {
+  useEffect(() => {
+    Aos.init()
+  })
   const { dispatch } = useContext(AuthContext)
   const navigate = useNavigate()
   const handleSignOut = () => {
@@ -70,7 +76,9 @@ function App() {
   }
   return (
     <>
-      <nav className='bg-[#002f34]'>
+      <nav className='bg-[#002f34]' data-aos="fade-down"
+     data-aos-easing="linear"
+     data-aos-duration="800">
         <div className="nav-wrapper flex items-center max-w-[1250px] m-auto justify-between">
           <div className="nav-logo w-[80px]">
             <Link to='/'>
@@ -79,14 +87,14 @@ function App() {
           </div>
           <div className="nav-right-side flex gap-[50px]">
             <div className='flex gap-[50px] for-d-none'>
-            <div className="nav-message flex text-white gap-[10px] cursor-pointer mt-[7px]">
-              <FiMessageSquare className='text-[25px] mt-[2px]' />
-              <p className='text-[18px] font-[700]'>Message</p>
-            </div>
-            <div className="nav-language flex gap-[15px] mt-[10px]">
-              <a href="" className='text-white no-underline'>Rus</a>
-              <a href="" className='text-white no-underline'>Uzb</a>
-            </div>
+              <div className="nav-message flex text-white gap-[10px] cursor-pointer mt-[7px]">
+                <FiMessageSquare className='text-[25px] mt-[2px]' />
+                <p className='text-[18px] font-[700]'>Message</p>
+              </div>
+              <div className="nav-language flex gap-[15px] mt-[10px]">
+                <a href="" className='text-white no-underline'>Rus</a>
+                <a href="" className='text-white no-underline'>Uzb</a>
+              </div>
             </div>
             <div className="nav-user-like flex mt-[8px] gap-[45px] cursor-pointer">
               <Link to='/likedproducts2'>

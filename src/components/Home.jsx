@@ -19,11 +19,15 @@ import sportitemsimg from '../assets/images/hobbi-otdyh-i-sport-903-1x.png'
 import discountimg from '../assets/images/otdam-darom-1151-1x.png'
 import exchangeimg from '../assets/images/obmen-barter-1153-1x.png'
 import { v4 } from 'uuid';
+import Aos from 'aos';
 export const Home = () => {
+    useEffect(() => {
+        Aos.init()
+    })
     const [defProducts, setdefProducts] = useState([])
     const dbValue1 = collection(db, 'defaultProducts')
     const shuffledArray = shuffleArray(defProducts);
-    const sliceDefProducts= shuffledArray.slice(0,12)
+    const sliceDefProducts = shuffledArray.slice(0, 12)
     const items = [
         {
             key: '1',
@@ -52,11 +56,11 @@ export const Home = () => {
     ];
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
-      }
+    }
     const [likedProducts, setLikedProducts] = useState(() => {
         const storedLikedProducts = localStorage.getItem('likedProducts');
         return storedLikedProducts ? JSON.parse(storedLikedProducts) : [];
@@ -70,7 +74,7 @@ export const Home = () => {
         updatedLikedProducts.splice(index, 1);
         setLikedProducts(updatedLikedProducts);
     };
-    
+
     useEffect(() => {
         localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
     }, [likedProducts]);
@@ -92,11 +96,12 @@ export const Home = () => {
                     </div>
                 </div>
             </div>
-            <div className='bg-white'>
+            <div className='bg-white' data-aos="zoom-in-up" data-aos-easing="linear"
+                data-aos-duration="800">
                 <section className='max-w-[1250px] m-auto pb-[80px]'>
                     <h1 className='text-center pt-[30px] font-[700]'>Products type</h1>
                     <div className="catagories-wrapper flex gap-[18px] flex-wrap  catagory  mt-[55px]">
-                        <div key={v4} className='w-[120px] text-center'>
+                        <div key={v4} className='w-[120px] text-center '>
                             <img src={kdworld} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ffc232]' />
                             <Link to='kidsworld' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Kids World</Link>
                         </div>
@@ -127,7 +132,7 @@ export const Home = () => {
                         <div key={v4} className='w-[120px] text-center'>
                             <img src={servicesimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ff5636]' />
                             <Link to='services' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Services</Link>
-                        </div>                        
+                        </div>
                         <div key={v4} className='w-[120px] text-center'>
                             <img src={fashionimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ffc232]' />
                             <Link to='fashion' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Fashion</Link>
@@ -162,7 +167,7 @@ export const Home = () => {
                                     <p className='text-[#002f34] font-semibold text-[18px] px-[15px]'>{defProduct.price}$</p>
                                     <p className='text-[14px] font-normal px-[15px]'>{defProduct.region}</p>
                                     <p className='text-[14px] font-normal px-[15px]'>17/02/2024  10:19</p>
-                                    <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id)} className='float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] text-black'/>
+                                    <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id)} className='float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] text-black' />
                                     <Link to={`/productdetail/${defProduct.id}`}><button className='btn btn-primary ml-[15px]'>View</button></Link>
                                 </div>
                             </>
