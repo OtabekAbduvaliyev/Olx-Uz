@@ -530,6 +530,22 @@ const Profile = () => {
                             </div>
                             <div class="p-4 md:p-5">
                                 <div className=" sm:mx-auto sm:w-full sm:max-w-sm ">
+                                <div className="w-92 mt-[15px] mb-[15px]">
+                                        <Select label="Select Type">
+                                            <Option onClick={handleSubmitToKidsWorld}>Kid's world</Option>
+                                            <Option onClick={handleSubmitToWorks}>Work</Option>
+                                            <Option onClick={handleSubmitToFashion}>Fashion</Option>
+                                            <Option onClick={handleSubmitToAnimals}>Animals</Option>
+                                            <Option onClick={handleSubmitToFurnitures}>Furnitures</Option>
+                                            <Option onClick={handleSubmitToTransport}>Transport</Option>
+                                            <Option onClick={handleSubmitToElecItems}>Electrical items</Option>
+                                            <Option onClick={handleSubmitToSportItems}>Sport items</Option>
+                                            <Option onClick={handleSubmitToHouses}>Houses</Option>
+                                            <Option onClick={handleSubmitToExchange}>Exchange</Option>
+                                            <Option onClick={handleSubmitToServices}>Services</Option>
+                                            <Option onClick={handleSubmitToDiscount}>Discount</Option>
+                                        </Select>
+                                    </div>
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">Name</label>
                                         <div className="mt-2">
@@ -601,22 +617,6 @@ const Profile = () => {
                                         <div className="mt-2">
                                         <input id='imgInput' required type="file" onChange={(e) => handleUpload(e)} className=" bg-[white] shadow-sm rounded-[5px] px-[20px] text-[yellow] font-[600] py-[15px]" />
                                         </div>
-                                    </div>
-                                    <div className="w-92 mt-[15px]">
-                                        <Select label="Select Version">
-                                            <Option onClick={handleSubmitToKidsWorld}>Kid's world</Option>
-                                            <Option onClick={handleSubmitToWorks}>Work</Option>
-                                            <Option onClick={handleSubmitToFashion}>Fashion</Option>
-                                            <Option onClick={handleSubmitToAnimals}>Animals</Option>
-                                            <Option onClick={handleSubmitToFurnitures}>Furnitures</Option>
-                                            <Option onClick={handleSubmitToTransport}>Transport</Option>
-                                            <Option onClick={handleSubmitToElecItems}>Electrical items</Option>
-                                            <Option onClick={handleSubmitToSportItems}>Sport items</Option>
-                                            <Option onClick={handleSubmitToHouses}>Houses</Option>
-                                            <Option onClick={handleSubmitToExchange}>Exchange</Option>
-                                            <Option onClick={handleSubmitToServices}>Services</Option>
-                                            <Option onClick={handleSubmitToDiscount}>Discount</Option>
-                                        </Select>
                                     </div>
                                     {!show ? <button
                                         onClick={handleSubmit}
