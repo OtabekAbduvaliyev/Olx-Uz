@@ -91,10 +91,6 @@ function App() {
                 <FiMessageSquare className='text-[25px] mt-[2px]' />
                 <p className='text-[18px] font-[700]'>Message</p>
               </div>
-              <div className="nav-language flex gap-[15px] mt-[10px]">
-                <a href="" className='text-white no-underline'>Rus</a>
-                <a href="" className='text-white no-underline'>Uzb</a>
-              </div>
             </div>
             <div className="nav-user-like flex mt-[8px] gap-[45px] cursor-pointer">
               <Link to='/likedproducts2'>
@@ -149,117 +145,10 @@ function App() {
           <Route path='search' element={<RequiredAuth><Search /></RequiredAuth>}></Route>
         </Routes>
       </main>
+      {/* <Footer /> */}
     </>
   )
 }
 
 export default App
-
-// // function Product({ product, onLike }) {
-// //   return (
-// //     <div>
-// //       {/* Render product details */}
-// //       <h2>{product.name}</h2>
-// //       <button onClick={() => onLike(product)}>Like</button>
-// //     </div>
-// //   );
-// // }
-
-// // function LikedProducts({ likedProducts, onUnlike }) {
-// //   return (
-// //     <div>
-// //       <h2>Liked Products</h2>
-// //       {/* Render list of liked products */}
-// //       <ul>
-// //         {likedProducts.map((product, index) => (
-// //           <li key={index}>
-// //             {product.name}{' '}
-// //             <button onClick={() => onUnlike(index)}>Unlike</button>
-// //           </li>
-// //         ))}
-// //       </ul>
-// //     </div>
-// //   );
-// // }
-
-// // function App() {
-// //   // Load liked products from local storage or initialize with an empty array
-// //   const [likedProducts, setLikedProducts] = useState(() => {
-// //     const storedLikedProducts = localStorage.getItem('likedProducts');
-// //     return storedLikedProducts ? JSON.parse(storedLikedProducts) : [];
-// //   });
-
-// //   // Function to add product to liked products list
-// //   const addToLikedProducts = (product) => {
-// //     setLikedProducts([...likedProducts, product]);
-// //   };
-
-// //   // Function to remove product from liked products list
-// //   const removeFromLikedProducts = (index) => {
-// //     const updatedLikedProducts = [...likedProducts];
-// //     updatedLikedProducts.splice(index, 1);
-// //     setLikedProducts(updatedLikedProducts);
-// //   };
-
-// //   // Save liked products to local storage whenever it changes
-// //   useEffect(() => {
-// //     localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
-// //   }, [likedProducts]);
-
-// //   return (
-// //     <div>
-// //       <h1>Products</h1>
-// //       {/* Render list of products */}
-// //       {productData.map((product) => (
-// //         <Product key={product.id} product={product} onLike={addToLikedProducts} />
-// //       ))}
-// //       <LikedProducts
-// //         likedProducts={likedProducts}
-// //         onUnlike={removeFromLikedProducts}
-// //       />
-// //     </div>
-// //   );
-// // }
-
-// // const productData = [
-// //   { id: 1, name: 'Product 1' },
-// //   { id: 2, name: 'Product 2' },
-// //   // Add more product data as needed
-// // ];
-
-// // export default App;
-
-// import React, { useState } from 'react';
-
-// function App() {
-//   const [products, setProducts] = useState([
-//     { id: 1, imageUrl: 'product1.jpg', heartColor: 'black' },
-//     { id: 2, imageUrl: 'product2.jpg', heartColor: 'red' },
-//     { id: 3, imageUrl: 'product3.jpg', heartColor: 'black' }
-// ]);
-
-// const changeHeartColor = (id) => {
-//     setProducts(products.map(product => {
-//         if (product.id === id) {
-//             return { ...product, heartColor: product.heartColor === 'black' ? 'red' : 'black' };
-//         }
-//         return product;
-//     }));
-// };
-
-// return (
-//     <div className="product-list">
-//         {products.map(product => (
-//             <div key={product.id} className="product">
-//                 <img src={product.imageUrl} alt="Product Image" />
-//                 <button className="favorite-btn" onClick={() => changeHeartColor(product.id)} style={{ color: product.heartColor }}>
-//                     click
-//                 </button>
-//             </div>
-//         ))}
-//     </div>
-// );
-// }
-
-// export default App;
 

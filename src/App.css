@@ -31,3 +31,6 @@ a{
         gap: 20px;
     }
 }
+footer a{
+    cursor: pointer;
+}

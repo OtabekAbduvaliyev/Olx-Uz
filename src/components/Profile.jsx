@@ -252,7 +252,7 @@ const Profile = () => {
         const month = time.getMonth()
         const year = time.getFullYear()
         const allTime = day + '/' + (month + 1) + '/' + year
-        await addDoc(dbValue1, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc,userId: localStorage.getItem('user')})
+        await addDoc(dbValue1, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc,userId: localStorage.getItem('user'), liked:false})
         {addToWorks && await addDoc(dbWorks, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
         {addToKidsWorld && await addDoc(dbKidsWorld, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
         {addToTransport && await addDoc(dbTransport, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
@@ -599,7 +599,7 @@ const Profile = () => {
                                             <label htmlFor="imgInput" className="block text-sm font-medium leading-6 text-gray-900">Image</label>
                                         </div>
                                         <div className="mt-2">
-                                        <input id='imgInput' type="file" onChange={(e) => handleUpload(e)} className=" bg-[white] shadow-sm rounded-[5px] px-[20px] text-[yellow] font-[600] py-[15px]" />
+                                        <input id='imgInput' required type="file" onChange={(e) => handleUpload(e)} className=" bg-[white] shadow-sm rounded-[5px] px-[20px] text-[yellow] font-[600] py-[15px]" />
                                         </div>
                                     </div>
                                     <div className="w-92 mt-[15px]">
