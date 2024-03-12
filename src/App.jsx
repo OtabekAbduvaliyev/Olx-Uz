@@ -3,10 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './assets/images/olx-logo-20F1656D13-seeklogo.com-removebg-preview.png'
 import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { FiMessageSquare } from "react-icons/fi";
+import LanguageSelector  from './components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 import { FaRegHeart } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Space } from 'antd';
+import { Dropdown, Space, message } from 'antd';
 import Home from './components/Home';
 import { useEffect } from 'react';
 import { Signup } from './components/Signup';
@@ -33,7 +35,9 @@ import Transports from './components/catagories/Transports';
 import Search from './components/Search';
 import Aos from 'aos';
 import 'aos/dist/aos.css'
+import Breadcrumbs from './components/Breadcrumbs';
 function App() {
+  const {t} = useTranslation()
   useEffect(() => {
     Aos.init()
   })
@@ -89,7 +93,10 @@ function App() {
             <div className='flex gap-[50px] for-d-none'>
               <div className="nav-message flex text-white gap-[10px] cursor-pointer mt-[7px]">
                 <FiMessageSquare className='text-[25px] mt-[2px]' />
-                <p className='text-[18px] font-[700]'>Message</p>
+                <p className='text-[18px] font-[700]'>{t('message')}</p>
+              </div>
+              <div className="nav-language flex gap-[15px] mt-[10px]">
+                <LanguageSelector />
               </div>
             </div>
             <div className="nav-user-like flex mt-[8px] gap-[45px] cursor-pointer">
@@ -106,7 +113,7 @@ function App() {
                   >
                     <a onClick={(e) => e.preventDefault()}>
                       <Space className='text-white text-[18px] font-[700] cursor-pointer'>
-                        Your Profile
+                        {t('profile')}
                         <DownOutlined />
                       </Space>
                     </a>
@@ -116,12 +123,13 @@ function App() {
             </div>
             <div className="nav-button">
               <Link to='profile'><button className='bg-[white] py-[10px] px-[22px] rounded-[8px] text-[#002f34] font-[700] text-[18px]'>
-                Give announcment
+                {t('giveAn')}!
               </button></Link>
             </div>
           </div>
         </div>
       </nav>
+      <Breadcrumbs />
       <main>
         <Routes>
           <Route path='/' element={<Home />} />

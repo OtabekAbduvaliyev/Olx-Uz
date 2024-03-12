@@ -4,9 +4,10 @@ import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const discount = () => {
     const [discount, setdiscount] = useState([])
-    const dbdiscount = collection(db, 'discount')
+    const dscType  = 'Discount'
+    const dbDefProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbdiscount,
+        dbDefProducts,
         (snapshot) => {
             let discList = []
             snapshot.docs.forEach((doc) => {
@@ -20,11 +21,11 @@ export const discount = () => {
     return (
         <div>
             <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {discount.map((disc) => {
+                        {discount.filter(dsType=> dscType == dsType.type ).map((disc) => {
                             return (
-                                <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
+                                <div class="lg:w-1/4 md:w-1/2 p-4 w-full" key={disc.id}>
                                     <a class="block relative h-48 rounded overflow-hidden">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" src={disc.imgUrl} />
                                     </a>

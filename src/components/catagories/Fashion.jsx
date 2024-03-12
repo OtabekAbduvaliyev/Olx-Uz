@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const fashion = () => {
+    const fashType = 'Fashion'
     const [fashion, setfashion] = useState([])
-    const dbfashion = collection(db, 'fashion')
+    const defaultProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbfashion,
+        defaultProducts,
         (snapshot) => {
             let fashionsList = []
             snapshot.docs.forEach((doc) => {
@@ -20,9 +21,9 @@ export const fashion = () => {
     return (
         <div>
             <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {fashion.map((fashions) => {
+                        {fashion.filter(fshType=> fashType == fshType.type ).map((fashions) => {
                             return (
                                 <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
                                     <a class="block relative h-48 rounded overflow-hidden">

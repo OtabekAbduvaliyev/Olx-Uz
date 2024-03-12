@@ -3,10 +3,11 @@ import { useState,useEffect } from 'react'
 import { collection,onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const Animals = () => {
+const anType = 'Animal'
   const [animals, setAnimals] = useState([])
-    const dbAnimals = collection(db, 'animals')
+    const dbDefProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbAnimals,
+        dbDefProducts,
         (snapshot) => {
             let animalList = []
             snapshot.docs.forEach((doc) => {
@@ -20,9 +21,9 @@ export const Animals = () => {
   return (
     <div>
        <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {animals.map((animal) => {
+                        {animals.filter(animalType=> anType == animalType.type).map((animal) => {
                             return (
                                 <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
                                     <a class="block relative h-48 rounded overflow-hidden">

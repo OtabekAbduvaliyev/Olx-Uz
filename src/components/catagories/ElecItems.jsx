@@ -4,9 +4,10 @@ import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const elecItems = () => {
     const [elecItems, setelecItems] = useState([])
-    const dbelecItems = collection(db, 'elecItems')
+    const elecIType = 'Electrical Items'
+    const defaultProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbelecItems,
+        defaultProducts,
         (snapshot) => {
             let workList = []
             snapshot.docs.forEach((doc) => {
@@ -20,9 +21,9 @@ export const elecItems = () => {
     return (
         <div>
             <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {elecItems.map((work) => {
+                        {elecItems.filter(eiType=> elecIType == eiType.type ).map((work) => {
                             return (
                                 <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
                                     <a class="block relative h-48 rounded overflow-hidden">

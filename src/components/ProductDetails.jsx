@@ -23,8 +23,9 @@ export const ProductDetails = () => {
     }, [])
     let { productId } = useParams()
     const product = defProducts.find((product)=>product.id === productId)
-    const {name,price,imgUrl,region,phoneNumber,desc} = product || {    }
+    const {name,price,imgUrl,region,phoneNumber,desc} = product || {   }
     console.log(productId);
+    console.log(name);
     return (
         <div>
             <section class="text-gray-600 body-font overflow-hidden">

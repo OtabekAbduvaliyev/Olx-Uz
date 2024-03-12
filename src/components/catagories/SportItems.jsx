@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const sportItemss = () => {
+    const spItType = 'Sport Items'
     const [sportItems, setsportItems] = useState([])
-    const dbsportItems = collection(db, 'sportitems')
+    const defaultProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbsportItems,
+        defaultProducts,
         (snapshot) => {
             let sportItemsList = []
             snapshot.docs.forEach((doc) => {
@@ -20,11 +21,11 @@ export const sportItemss = () => {
     return (
         <div>
             <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {sportItems.map((sportItems) => {
+                        {sportItems.filter(spType=> spItType == spType.type ).map((sportItems) => {
                             return (
-                                <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
+                                <div class="lg:w-1/4 md:w-1/2 p-4 w-full" key={sportItems.id}>
                                     <a class="block relative h-48 rounded overflow-hidden">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" src={sportItems.imgUrl} />
                                     </a>

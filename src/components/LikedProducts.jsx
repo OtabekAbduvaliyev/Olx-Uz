@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-export const LikedProducts = () => {
+import { db } from '../firbese';
+import { doc, updateDoc } from 'firebase/firestore';
+export const LikedProducts = (likedPr) => {
     const [likedProducts, setLikedProducts] = useState([]);
 
     useEffect(() => {
@@ -9,7 +11,11 @@ export const LikedProducts = () => {
             setLikedProducts(JSON.parse(storedLikedProducts));
         }
     }, []);
-    const removeFromLikedProducts = (productId) => {
+    const removeFromLikedProducts = async (productId) => {
+        const updateData = doc(db, 'defaultProducts', productId)
+        await updateDoc(updateData,{
+         liked:!likedPr
+        })
         const indexToRemove = likedProducts.findIndex(product => product.id === productId);
         if (indexToRemove !== -1) {
             const updatedLikedProducts = [...likedProducts];
@@ -43,7 +49,7 @@ export const LikedProducts = () => {
                                 </th>
                             </tr>
                         </thead>
-                        {likedProducts && likedProducts.map((product, index) => {
+                        {likedProducts && likedProducts.map((product) => {
                             return (
                                 <tbody>
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

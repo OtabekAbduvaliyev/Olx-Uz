@@ -1,10 +1,11 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
-import { v4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { Select, Option } from "@material-tailwind/react";
 import { collection, getDocs, deleteDoc, doc, onSnapshot, addDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useTranslation } from 'react-i18next';
 import { db, imgDB } from '../firbese';
 const Profile = () => {
     const [name, setName] = useState('')
@@ -14,51 +15,13 @@ const Profile = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [desc, setDesc] = useState('')
     const [defProducts, setdefProducts] = useState([])
-    const [works, setWorks] = useState([])
-    const [kidsWorld, setKidsWorld] = useState([])
-    const [transport, setTransport] = useState([])
-    const [fashion, setFashion] = useState([])
-    const [animals, setAnimals] = useState([])
-    const [furnitures, setFurnitures] = useState([])
-    const [elecItems, setElecItems] = useState([])
-    const [sportItems, setSportItems] = useState([])
-    const [houses, setHouses] = useState([])
-    const [exchange, setExchage] = useState([])
-    const [services, setServices] = useState([])
-    const [discount, setDiscount] = useState([])
     const [show, setShow] = useState(false)
     const [id, setId] = useState()
     const [showModal, setShowModal] = useState(false)
-    const [addToWorks, setAddToWorks] = useState(false)
-    const [addToKidsWorld, setAddToKidsWorld] = useState(false)
-    const [addToTransport, setAddToTransport] = useState(false)
-    const [addToFashion, setAddToFashion] = useState(false)
-    const [addToAnimals, setAddToAnimals] = useState(false)
-    const [addToFurnitures, setAddToFurnitures] = useState(false)
-    const [addToElecItems, setAddToElecItems] = useState(false)
-    const [addToSportItems, setAddToSportItems] = useState(false)
-    const [addToHouses, setAddToHouses] = useState(false)
-    const [addToExchange, setAddToExchange] = useState(false)
-    const [addToServices, setAddToServices] = useState(false)
-    const [addToDiscount, setAddToDiscount] = useState(false)
-    const dbWorks = collection(db, 'works')
-    const dbKidsWorld = collection(db, 'kidsworld')
-    const dbTransport = collection(db, 'transport')
-    const dbFashion = collection(db, 'fashion')
-    const dbValue1 = collection(db, 'defaultProducts')
-    const dbAnimals = collection(db, 'animals')
-    const dbFurnitures = collection(db, 'furnitures')
-    const dbElecItems = collection(db, 'elecItems')
-    const dbSportItems = collection(db, 'sportitems')
-    const dbHouses = collection(db, 'houses')
-    const dbExchange = collection(db, 'exchange')
-    const dbServices = collection(db, 'services')
-    const dbDiscount = collection(db, 'discount')
+    const {t} = useTranslation()
     const time = new Date()
-    const day = time.getDate()
-    const month = time.getMonth()
-    const year = time.getFullYear()
-    const allTime = day + '/' + (month + 1) + '/' + year
+    const dbValue1 = collection(db, 'defaultProducts')
+    const [selectedType, setSelectedType] = useState(''); 
     const handleEdit = async (id, name, region, price, imgUrl) => {
         setName(name)
         setPrice(price)
@@ -70,7 +33,6 @@ const Profile = () => {
     }
     const handleUpdate = async () => {
         const updateData = doc(db, 'defaultProducts', id)
-        // console.log(users);
         await updateDoc(updateData, { name: name, region: region, price: price, imgUrl: img })
         setShow(false)
         setName('')
@@ -78,193 +40,25 @@ const Profile = () => {
         setPrice('')
         closeModal()
     }
-    const handleSubmitToWorks = async () =>{
-        setAddToWorks(true)
-        setAddToKidsWorld(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }
-    const handleSubmitToKidsWorld = async () =>{
-        setAddToKidsWorld(true)
-        setAddToWorks(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }
-    const handleSubmitToTransport = async () =>{
-        setAddToTransport(true)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-        setAddToFashion(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }
-    const handleSubmitToFashion = async () =>{
-        setAddToFashion(true)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }
-    const handleSubmitToAnimals = async () =>{
-        setAddToAnimals(true)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }   
-    const handleSubmitToFurnitures = async () =>{
-        setAddToFurnitures(true)
-        setAddToAnimals(false)
-        setAddToElecItems(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }    
-    const handleSubmitToElecItems = async () =>{
-        setAddToElecItems(true)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-    }
-    const handleSubmitToSportItems = async () =>{
-        setAddToSportItems(true)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-        setAddToElecItems(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-    }
-    const handleSubmitToHouses = async () =>{
-        setAddToHouses(true)
-        setAddToSportItems(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-    }
-    const handleSubmitToExchange = async () =>{
-        setAddToExchange(true)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToServices(false)
-        setAddToDiscount(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToElecItems(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-    }   
-    const handleSubmitToServices = async () =>{
-        setAddToServices(true)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToDiscount(false)
-        setAddToFurnitures(false)
-        setAddToAnimals(false)
-        setAddToElecItems(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-    }    
-    const handleSubmitToDiscount = async () =>{
-        setAddToDiscount(true)
-        setAddToSportItems(false)
-        setAddToHouses(false)
-        setAddToExchange(false)
-        setAddToServices(false)
-        setAddToElecItems(false)
-        setAddToAnimals(false)
-        setAddToFurnitures(false)
-        setAddToFashion(false)
-        setAddToTransport(false)
-        setAddToKidsWorld(false)
-        setAddToWorks(false)
-    }
     const handleSubmit = async () => {
-        const time = new Date()
         const day = time.getDate()
         const month = time.getMonth()
         const year = time.getFullYear()
-        const allTime = day + '/' + (month + 1) + '/' + year
-        await addDoc(dbValue1, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc,userId: localStorage.getItem('user'), liked:false})
-        {addToWorks && await addDoc(dbWorks, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToKidsWorld && await addDoc(dbKidsWorld, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToTransport && await addDoc(dbTransport, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToFashion && await addDoc(dbFashion, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToAnimals && await addDoc(dbAnimals, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToFurnitures && await addDoc(dbFurnitures, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToElecItems && await addDoc(dbElecItems, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToSportItems && await addDoc(dbSportItems, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToHouses && await addDoc(dbHouses, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToExchange && await addDoc(dbExchange, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToServices && await addDoc(dbServices, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
-        {addToDiscount && await addDoc(dbDiscount, { name: name, region: region, price: price, imgUrl: img, phoneNumber: phoneNumber, desc: desc })}
+        const hour = time.getHours()
+        const minute = time.getMinutes()
+        const allTime = hour+':'+minute +'  '+ day + '/' + (month + 1) + '/' + year
+        await addDoc(dbValue1, { 
+            name: name, 
+            region: region, 
+            price: price, 
+            imgUrl: img, 
+            phoneNumber: phoneNumber, 
+            desc: desc,
+            userId: localStorage.getItem('user'), 
+            liked:false,
+            time:allTime,
+            type:selectedType
+        })
         setShowModal(false)
         setShow(false)
     }
@@ -284,158 +78,13 @@ const Profile = () => {
             ), (err) => {
                 console.log(err);
             }
-        onSnapshot(
-            dbWorks,
-            (snapshot) => {
-                let workList = []
-                snapshot.docs.forEach((doc) => {
-                    workList.push({ id: doc.id, ...doc.data() })
-                })
-                setWorks(workList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbKidsWorld,
-            (snapshot) => {
-                let kidsWorldList = []
-                snapshot.docs.forEach((doc) => {
-                    kidsWorldList.push({ id: doc.id, ...doc.data() })
-                })
-                setKidsWorld(kidsWorldList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbTransport,
-            (snapshot) => {
-                let transportList = []
-                snapshot.docs.forEach((doc) => {
-                    transportList.push({ id: doc.id, ...doc.data() })
-                })
-                setTransport(transportList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbFashion,
-            (snapshot) => {
-                let fashionList = []
-                snapshot.docs.forEach((doc) => {
-                    fashionList.push({ id: doc.id, ...doc.data() })
-                })
-                setFashion(fashionList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbAnimals,
-            (snapshot) => {
-                let animalList = []
-                snapshot.docs.forEach((doc) => {
-                    animalList.push({ id: doc.id, ...doc.data() })
-                })
-                setAnimals(animalList)
-            }
-        ), (err) => {
-            console.log(err);
-        }        
-        onSnapshot(
-            dbFurnitures,
-            (snapshot) => {
-                let furnitureList = []
-                snapshot.docs.forEach((doc) => {
-                    furnitureList.push({ id: doc.id, ...doc.data() })
-                })
-                setFurnitures(furnitureList)
-            }
-        ), (err) => {
-            console.log(err);
-        }        
-        onSnapshot(
-            dbElecItems,
-            (snapshot) => {
-                let elecItemList = []
-                snapshot.docs.forEach((doc) => {
-                    elecItemList.push({ id: doc.id, ...doc.data() })
-                })
-                setElecItems(elecItemList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        ///////////////////////////////////////////////////////////////
-        onSnapshot(
-            dbSportItems,
-            (snapshot) => {
-                let sportItemsList = []
-                snapshot.docs.forEach((doc) => {
-                    sportItemsList.push({ id: doc.id, ...doc.data() })
-                })
-                setSportItems(sportItemsList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbHouses,
-            (snapshot) => {
-                let housesList = []
-                snapshot.docs.forEach((doc) => {
-                    housesList.push({ id: doc.id, ...doc.data() })
-                })
-                setHouses(housesList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbExchange,
-            (snapshot) => {
-                let exchangeList = []
-                snapshot.docs.forEach((doc) => {
-                    exchangeList.push({ id: doc.id, ...doc.data() })
-                })
-                setExchage(exchangeList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbServices,
-            (snapshot) => {
-                let serviceList = []
-                snapshot.docs.forEach((doc) => {
-                    serviceList.push({ id: doc.id, ...doc.data() })
-                })
-                setServices(serviceList)
-            }
-        ), (err) => {
-            console.log(err);
-        }
-        onSnapshot(
-            dbDiscount,
-            (snapshot) => {
-                let discountList = []
-                snapshot.docs.forEach((doc) => {
-                    discountList.push({ id: doc.id, ...doc.data() })
-                })
-                setDiscount(discountList)
-            }
-        ), (err) => {
-            console.log(err);
-        }   
     }, [])
     const handleDelete = async (id) => {
         await deleteDoc(doc(db, "defaultProducts", id));
     }
     const handleUpload = (e) => {
         console.log(e.target.files[0])
-        const imgs = ref(imgDB, `Imgs/${v4()}`)
+        const imgs = ref(imgDB, `Imgs/${uuidv4()}`)
         uploadBytes(imgs, e.target.files[0]).then(data => {
             console.log(data, "imgs")
             getDownloadURL(data.ref).then(val => {
@@ -451,35 +100,36 @@ const Profile = () => {
     useEffect(() => {
         getData()
     })
+
     return (
         <div>
-            <h1 className='text-center mt-[50px]'>Your Profile</h1>
+            <h1 className='text-center mt-[50px]'>{t('profileTitle')}</h1>
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-[40px]">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
-                                Image
+                            {t('prImage')}
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Product name
+                            {t('prProductName')}
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Region
+                            {t('prRegion')}
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Time
+                            {t('prTime')}
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Price
+                            {t('prPrice')}
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Edit
+                            {t('prEdit')}
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Delete
+                            {t('prDelete')}
                             </th>
-                            <button className='btn btn-success mt-[3px]' onClick={() => setShowModal(true)}>New</button>
+                            <button className='btn btn-success mt-[3px]' onClick={() => setShowModal(true)}>{t('prCreateNew')}</button>
                         </tr>
                     </thead>
                     {defProducts.filter(item => item.userId == localStorage.getItem('user')).map((defPro) => {
@@ -531,20 +181,6 @@ const Profile = () => {
                             <div class="p-4 md:p-5">
                                 <div className=" sm:mx-auto sm:w-full sm:max-w-sm ">
                                 <div className="w-92 mt-[15px] mb-[15px]">
-                                        <Select label="Select Type">
-                                            <Option onClick={handleSubmitToKidsWorld}>Kid's world</Option>
-                                            <Option onClick={handleSubmitToWorks}>Work</Option>
-                                            <Option onClick={handleSubmitToFashion}>Fashion</Option>
-                                            <Option onClick={handleSubmitToAnimals}>Animals</Option>
-                                            <Option onClick={handleSubmitToFurnitures}>Furnitures</Option>
-                                            <Option onClick={handleSubmitToTransport}>Transport</Option>
-                                            <Option onClick={handleSubmitToElecItems}>Electrical items</Option>
-                                            <Option onClick={handleSubmitToSportItems}>Sport items</Option>
-                                            <Option onClick={handleSubmitToHouses}>Houses</Option>
-                                            <Option onClick={handleSubmitToExchange}>Exchange</Option>
-                                            <Option onClick={handleSubmitToServices}>Services</Option>
-                                            <Option onClick={handleSubmitToDiscount}>Discount</Option>
-                                        </Select>
                                     </div>
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">Name</label>
@@ -618,6 +254,20 @@ const Profile = () => {
                                         <input id='imgInput' required type="file" onChange={(e) => handleUpload(e)} className=" bg-[white] shadow-sm rounded-[5px] px-[20px] text-[yellow] font-[600] py-[15px]" />
                                         </div>
                                     </div>
+                                    <Select label="Select Type" value={selectedType} onChange={value => setSelectedType(value)}>
+                                            <Option value='Kids world'>Kid's world</Option>
+                                            <Option value='Work'>Work</Option>
+                                            <Option value='Fashion'>Fashion</Option>
+                                            <Option value='Animal'>Animals</Option>
+                                            <Option value='Furniture'>Furnitures</Option>
+                                            <Option value='Transport'>Transport</Option>
+                                            <Option value='Electrical Items'>Electrical items</Option>
+                                            <Option value='Sport Items'>Sport items</Option>
+                                            <Option value='House'>Houses</Option>
+                                            <Option value='Exchange'>Exchange</Option>
+                                            <Option value='Service'>Services</Option>
+                                            <Option value='Discount'>Discount</Option>
+                                        </Select>
                                     {!show ? <button
                                         onClick={handleSubmit}
                                         className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-[15px]">Submit

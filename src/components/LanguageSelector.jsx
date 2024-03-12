@@ -14,10 +14,10 @@ export const LanguageSelector = () => {
         {code:'uz', lang:'Uzbek'}
     ]
   return (
-  <div className="btn-container">
+  <div className="btn-container flex gap-[20px]">
   {
     languages.map((lng)=>{
-        return <button className= {lng.code===i18n.language ? 'btn btn-warning':'' }key={lng.code} onClick={()=>changeLanguage(lng.code)}>{lng.lang}</button>
+        return <a className= {`${lng.code===i18n.language} text-white cursor-pointer` }key={lng.code} onClick={()=>changeLanguage(lng.code)}>{lng.lang}</a>
     })
   }
   </div>

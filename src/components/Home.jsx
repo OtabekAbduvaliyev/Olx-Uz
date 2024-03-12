@@ -3,7 +3,7 @@ import '../App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../firbese';
 import { useTranslation } from 'react-i18next';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import LikedProducts from './LikedProducts';
 import { FaRegHeart } from "react-icons/fa";
@@ -19,15 +19,15 @@ import fashionimg from '../assets/images/moda-i-stil-891-1x.png'
 import sportitemsimg from '../assets/images/hobbi-otdyh-i-sport-903-1x.png'
 import discountimg from '../assets/images/otdam-darom-1151-1x.png'
 import exchangeimg from '../assets/images/obmen-barter-1153-1x.png'
-import { v4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import Aos from 'aos';
 import Footer from './Footer';
-import LanguageSelector  from './LanguageSelector';
 export const Home = () => {
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     useEffect(() => {
         Aos.init()
     })
+    const [like,setLike] = useState()
     const [defProducts, setdefProducts] = useState([])
     const dbValue1 = collection(db, 'defaultProducts')
     const shuffledArray = shuffleArray(defProducts);
@@ -69,8 +69,19 @@ export const Home = () => {
         const storedLikedProducts = localStorage.getItem('likedProducts');
         return storedLikedProducts ? JSON.parse(storedLikedProducts) : [];
     });
-    const addToLikedProducts = (newDone, id) => {
-        setLikedProducts([...likedProducts, newDone])
+    const addToLikedProducts = async (newDone, id, likedPr) => {
+        const updateData = doc(db, 'defaultProducts', id)
+        await updateDoc(updateData, {
+            liked: !likedPr
+        })
+        if (!likedPr) {
+            // If the product is not already liked, add it to the liked products
+            setLikedProducts([...likedProducts, newDone]);
+        } else {
+            // If the product is already liked, remove it from the liked products
+            const updatedLikedProducts = likedProducts.filter(product => product.id !== id);
+            setLikedProducts(updatedLikedProducts);
+        }
         const updatedProducts = defProducts.map(product => {
             if (product.id === id) {
                 return { ...product, liked: !product.liked };
@@ -80,14 +91,18 @@ export const Home = () => {
         setdefProducts(updatedProducts)
     }
 
-    const removeFromLikedProducts = (index) => {
+    const removeFromLikedProducts = async (index) => {
+        const updateData = doc(db, 'defaultProducts', index)
+        await updateDoc(updateData, {
+            liked: !likedPr
+        })
         const updatedLikedProducts = [...likedProducts];
         updatedLikedProducts.splice(index, 1);
         setLikedProducts(updatedLikedProducts);
     };
 
     useEffect(() => {
-        localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
+        localStorage.setItem('likedProducts', JSON.stringify(likedProducts  ));
     }, [likedProducts]);
 
     useEffect(() => {
@@ -97,7 +112,20 @@ export const Home = () => {
         }
         getdefProducts()
     }, [])
-
+    const divIds = [
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4(),
+        uuidv4()
+      ];
     return (
         <>
             <div className='bg-[#f2f4f5]'>
@@ -106,63 +134,63 @@ export const Home = () => {
                     data-aos-duration="800">
                     <div className="search-input text-center mt-[60px]">
                         <div class="input-group mb-3 m-auto max-w-[1200px]">
-                            <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" className='w-[1100px] rounded-lg h-[60px] border-black box-border pl-[20px]' />
-                            <Link to='search' className='btn btn-outline-secondary'><button class="btn" type="button" id="button-addon2">Search</button></Link>
+                            <input type="text" class="form-control" placeholder={t('placeholder')} aria-label="Recipient's username" aria-describedby="button-addon2" className='w-[1100px] rounded-lg h-[60px] border-black box-border pl-[20px]' />
+                            <Link to='search' className='btn btn-outline-secondary'><button class="btn" type="button" id="button-addon2">{t('placeholder')}</button></Link>
                         </div>
                     </div>
                 </div>
                 <div className='bg-white' data-aos="zoom-in-up" data-aos-easing="linear"
                     data-aos-duration="800">
                     <section className='max-w-[1250px] m-auto pb-[80px]'>
-                        <h1 className='text-center pt-[30px] font-[700]'>Products type</h1>
+                        <h1 className='text-center pt-[30px] font-[700]'>{t('productType')}</h1>
                         <div className="catagories-wrapper flex gap-[18px] flex-wrap  catagory  mt-[55px]">
-                            <div key={v4} className='w-[120px] text-center '>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center '>
                                 <img src={kdworld} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ffc232]' />
-                                <Link to='kidsworld' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Kids World</Link>
+                                <Link to='kidsworld' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('kw')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={houses} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#3a77ff]' />
-                                <Link to='houses' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Houses</Link>
+                                <Link to='houses' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('house')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={transport} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#23e5db]' />
                                 <Link to='transport' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Transport</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={workimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] mb-[10px] bg-[#ff5636]' />
-                                <Link to='works' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Works</Link>
+                                <Link to='works' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('work')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={animalimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#fff6d9]' />
-                                <Link to='animals' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Animals</Link>
+                                <Link to='animals' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('animal')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={furnitureimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#3a77ff]' />
-                                <Link to='furnitures' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Furnitures</Link>
+                                <Link to='furnitures' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('furniture')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={elecItemsimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#23e5db]' />
-                                <Link to='electricalitems' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Electrical items</Link>
+                                <Link to='electricalitems' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('elecItems')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={servicesimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ff5636]' />
-                                <Link to='services' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Services</Link>
+                                <Link to='services' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('services')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={fashionimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ffc232]' />
-                                <Link to='fashion' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Fashion</Link>
+                                <Link to='fashion' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('fashion')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={sportitemsimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#3a77ff]' />
-                                <Link to='sportitems' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Sport items</Link>
+                                <Link to='sportitems' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('sportItems')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={discountimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#23e5db]' />
-                                <Link to='discount' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Discount</Link>
+                                <Link to='discount' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('discount')}</Link>
                             </div>
-                            <div key={v4} className='w-[120px] text-center'>
+                            <div key={divIds[uuidv4]} className='w-[120px] text-center'>
                                 <img src={exchangeimg} alt="" className='rounded-[50%] w-[100%] mb-[10px] max-w-[90px] ml-[15px] bg-[#ff5636]' />
-                                <Link to='exchange' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>Exchange</Link>
+                                <Link to='exchange' className='no-underline hover:no-underline decoration-[white] text-[#002f34] cursor-pointer hover:bg-[#002f34] px-[10px] rounded-[5px] text-[18px] font-[600] hover:text-[white]'>{t('exchange')}</Link>
                             </div>
                         </div>
                     </section>
@@ -171,8 +199,7 @@ export const Home = () => {
                 </>
 
                 <div>
-                    {/* <LanguageSelector /> */}
-                    <h1 className='text-center font-[700] pt-[55px]'>Top Products</h1>
+                    <h1 className='text-center font-[700] pt-[55px]'>Top products</h1>
                     <div className="defaultProductsWrapper defaultProducts max-w-[1250px] m-auto flex gap-[10px] justify-center flex-wrap pt-[30px] pb-[80px]">
                         {sliceDefProducts.map((defProduct) => {
                             return (
@@ -182,20 +209,21 @@ export const Home = () => {
                                         <p className='text-[18px] font-medium px-[15px] mt-[10px]'>{defProduct.name}</p>
                                         <p className='text-[#002f34] font-semibold text-[18px] px-[15px]'>{defProduct.price}$</p>
                                         <p className='text-[14px] font-normal px-[15px]'>{defProduct.region}</p>
-                                        <p className='text-[14px] font-normal px-[15px]'>17/02/2024  10:19</p>
-                                        <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id)} className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color: defProduct.liked ? 'red' : 'grey' }} />
+                                        <p className='text-[14px] font-normal px-[15px]'>{defProduct.time}</p>
+                                        <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id, defProduct.liked)} className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color: defProduct.liked ? 'red' : 'grey' }} />
                                         <Link to={`/productdetail/${defProduct.id}`}><button className='btn btn-primary ml-[15px]'>View</button></Link>
+                                    </div>
+                                    <div className='d-none'>
+                                        <LikedProducts
+                                            likedPr={defProduct.liked}
+                                            likedProducts={likedProducts}
+                                            onUnlike={removeFromLikedProducts}
+                                        />
                                     </div>
                                 </>
                             )
                         })}
                     </div>
-                </div>
-                <div className='d-none'>
-                    <LikedProducts
-                        likedProducts={likedProducts}
-                        onUnlike={removeFromLikedProducts}
-                    />
                 </div>
             </div>
             <Footer />

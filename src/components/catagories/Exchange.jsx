@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const exchange = () => {
+    const exType = 'Exchange'
     const [exchange, setexchange] = useState([])
-    const dbexchange = collection(db, 'exchange')
+    const defaultProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbexchange,
+        defaultProducts,
         (snapshot) => {
             let exchList = []
             snapshot.docs.forEach((doc) => {
@@ -20,9 +21,9 @@ export const exchange = () => {
     return (
         <div>
             <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {exchange.map((exch) => {
+                        {exchange.filter(exchType=> exType == exchType.type ).map((exch) => {
                             return (
                                 <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
                                     <a class="block relative h-48 rounded overflow-hidden">

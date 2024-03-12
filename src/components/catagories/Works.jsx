@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firbese'
 export const Works = () => {
+    const workType = 'Work'
     const [works, setWorks] = useState([])
-    const dbWorks = collection(db, 'works')
+    const defaultProducts = collection(db, 'defaultProducts')
     onSnapshot(
-        dbWorks,
+        defaultProducts,
         (snapshot) => {
             let workList = []
             snapshot.docs.forEach((doc) => {
@@ -20,11 +21,11 @@ export const Works = () => {
     return (
         <div>
             <section class="text-gray-600 body-font">
-                <div class="container px-5 py-24 mx-auto">
+                <div class="container px-5 py-4 mx-auto">
                     <div class="flex flex-wrap -m-4">
-                        {works.map((work) => {
+                        {works.filter(wrType=> workType == wrType.type ).map((work) => {
                             return (
-                                <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
+                                <div class="lg:w-1/4 md:w-1/2 p-4 w-full" key={work.id}>
                                     <a class="block relative h-48 rounded overflow-hidden">
                                         <img alt="ecommerce" class="object-cover object-center w-full h-full block" src={work.imgUrl} />
                                     </a>
