@@ -27,37 +27,10 @@ export const Home = () => {
     useEffect(() => {
         Aos.init()
     })
-    const [like,setLike] = useState()
     const [defProducts, setdefProducts] = useState([])
     const dbValue1 = collection(db, 'defaultProducts')
     const shuffledArray = shuffleArray(defProducts);
     const sliceDefProducts = shuffledArray.slice(0, 12)
-    const items = [
-        {
-            key: '1',
-            label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-                    1st menu item
-                </a>
-            ),
-        },
-        {
-            key: '2',
-            label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-                    2nd menu item
-                </a>
-            ),
-        },
-        {
-            key: '3',
-            label: (
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                    3rd menu item
-                </a>
-            ),
-        },
-    ];
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -71,11 +44,9 @@ export const Home = () => {
     });
     const addToLikedProducts = async (newDone, id, likedPr) => {
         const updateData = doc(db, 'defaultProducts', id)
-        if(id == localStorage.getItem('user')){
             await updateDoc(updateData, {
                 liked: !likedPr
             })
-        }
         if (!likedPr) {
             // If the product is not already liked, add it to the liked products
             setLikedProducts([...likedProducts, newDone]);
