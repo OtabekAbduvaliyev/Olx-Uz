@@ -38,44 +38,6 @@ export const Home = () => {
         }
         return array;
     }
-    const [likedProducts, setLikedProducts] = useState(() => {
-        const storedLikedProducts = localStorage.getItem('likedProducts');
-        return storedLikedProducts ? JSON.parse(storedLikedProducts) : [];
-    });
-    const addToLikedProducts = async (newDone, id, likedPr) => {
-        const updateData = doc(db, 'defaultProducts', id)
-            await updateDoc(updateData, {
-                liked: !likedPr
-            })
-        if (!likedPr) {
-            // If the product is not already liked, add it to the liked products
-            setLikedProducts([...likedProducts, newDone]);
-        } else {
-            // If the product is already liked, remove it from the liked products
-            const updatedLikedProducts = likedProducts.filter(product => product.id !== id);
-            setLikedProducts(updatedLikedProducts);
-        }
-        const updatedProducts = defProducts.map(product => {
-            if (product.id === id) {
-                return { ...product, liked: !product.liked };
-            }
-            return product;
-        });
-        setdefProducts(updatedProducts)
-    }
-    const removeFromLikedProducts = async (index) => {
-        const updateData = doc(db, 'defaultProducts', index)
-        await updateDoc(updateData, {
-            liked: !likedPr
-        })
-        const updatedLikedProducts = [...likedProducts];
-        updatedLikedProducts.splice(index, 1);
-        setLikedProducts(updatedLikedProducts);
-    };
-    useEffect(() => {
-        localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
-    }, [likedProducts]);
-
     useEffect(() => {
         const getdefProducts = async () => {
             const dbVal1 = await getDocs(dbValue1)
@@ -96,7 +58,28 @@ export const Home = () => {
         uuidv4(),
         uuidv4(),
         uuidv4()
-      ];
+    ];
+    const [likedProducts, setLikedProducts] = useState([]);
+
+    useEffect(() => {
+        const storedLikedProducts = JSON.parse(localStorage.getItem('likedProducts')) || [];
+        setLikedProducts(storedLikedProducts);
+    }, []);
+
+    const toggleLike = (product) => {
+        const isLiked = likedProducts.some(p => p.id === product.id);
+        let updatedLikedProducts = [];
+
+        if (isLiked) {
+            updatedLikedProducts = likedProducts.filter(p => p.id !== product.id);
+        } else {
+            updatedLikedProducts = [...likedProducts, product];
+        }
+
+        setLikedProducts(updatedLikedProducts);
+        localStorage.setItem('likedProducts', JSON.stringify(updatedLikedProducts));
+    };
+
     return (
         <>
             <div className='bg-[#f2f4f5]'>
@@ -181,14 +164,12 @@ export const Home = () => {
                                         <p className='text-[#002f34] font-semibold text-[18px] px-[15px]'>{defProduct.price}$</p>
                                         <p className='text-[14px] font-normal px-[15px]'>{defProduct.region}</p>
                                         <p className='text-[14px] font-normal px-[15px]'>{defProduct.time}</p>
-                                        <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id, defProduct.liked)} className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color:defProduct.liked ? 'red' : 'grey' }} />
+                                        <FaRegHeart className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color: likedProducts.some(p => p.id === defProduct.id) ? 'red' : 'grey' }}
+                                            onClick={() => toggleLike(defProduct)} />
                                         <Link to={`/productdetail/${defProduct.id}`}><button className='btn btn-primary ml-[15px]'>View</button></Link>
                                     </div>
                                     <div className='d-none'>
                                         <LikedProducts
-                                            likedPr={defProduct.liked}
-                                            likedProducts={likedProducts}
-                                            onUnlike={removeFromLikedProducts}
                                         />
                                     </div>
                                 </>
