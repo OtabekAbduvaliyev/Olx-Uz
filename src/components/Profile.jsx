@@ -57,7 +57,7 @@ const Profile = () => {
             userId: localStorage.getItem('user'), 
             liked:false,
             time:allTime,
-            type:selectedType
+            type:selectedType,
         })
         setShowModal(false)
         setShow(false)

@@ -71,9 +71,11 @@ export const Home = () => {
     });
     const addToLikedProducts = async (newDone, id, likedPr) => {
         const updateData = doc(db, 'defaultProducts', id)
-        await updateDoc(updateData, {
-            liked: !likedPr
-        })
+        if(id == localStorage.getItem('user')){
+            await updateDoc(updateData, {
+                liked: !likedPr
+            })
+        }
         if (!likedPr) {
             // If the product is not already liked, add it to the liked products
             setLikedProducts([...likedProducts, newDone]);
@@ -90,7 +92,6 @@ export const Home = () => {
         });
         setdefProducts(updatedProducts)
     }
-
     const removeFromLikedProducts = async (index) => {
         const updateData = doc(db, 'defaultProducts', index)
         await updateDoc(updateData, {
@@ -100,9 +101,8 @@ export const Home = () => {
         updatedLikedProducts.splice(index, 1);
         setLikedProducts(updatedLikedProducts);
     };
-
     useEffect(() => {
-        localStorage.setItem('likedProducts', JSON.stringify(likedProducts  ));
+        localStorage.setItem('likedProducts', JSON.stringify(likedProducts));
     }, [likedProducts]);
 
     useEffect(() => {
@@ -210,7 +210,7 @@ export const Home = () => {
                                         <p className='text-[#002f34] font-semibold text-[18px] px-[15px]'>{defProduct.price}$</p>
                                         <p className='text-[14px] font-normal px-[15px]'>{defProduct.region}</p>
                                         <p className='text-[14px] font-normal px-[15px]'>{defProduct.time}</p>
-                                        <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id, defProduct.liked)} className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color: defProduct.liked ? 'red' : 'grey' }} />
+                                        <FaRegHeart onClick={() => addToLikedProducts(defProduct, defProduct.id, defProduct.liked)} className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color:defProduct.liked ? 'red' : 'grey' }} />
                                         <Link to={`/productdetail/${defProduct.id}`}><button className='btn btn-primary ml-[15px]'>View</button></Link>
                                     </div>
                                     <div className='d-none'>
