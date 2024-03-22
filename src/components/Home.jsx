@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense,CSSProperties } from 'react'
 import '../App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../firbese';
 import { useTranslation } from 'react-i18next';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
-import LikedProducts from './LikedProducts';
-import { FaRegHeart } from "react-icons/fa";
 import kdworld from '../assets/images/detskiy-mir-36-1x.png'
 import houses from '../assets/images/nedvizhimost-1-1x.png'
 import transport from '../assets/images/transport-3-1x.png'
@@ -19,9 +17,12 @@ import fashionimg from '../assets/images/moda-i-stil-891-1x.png'
 import sportitemsimg from '../assets/images/hobbi-otdyh-i-sport-903-1x.png'
 import discountimg from '../assets/images/otdam-darom-1151-1x.png'
 import exchangeimg from '../assets/images/obmen-barter-1153-1x.png'
+import 'react-loading-skeleton/dist/skeleton.css'
 import { v4 as uuidv4 } from 'uuid';
 import Aos from 'aos';
 import Footer from './Footer';
+import { GridLoader,HashLoader,ScaleLoader } from 'react-spinners';
+const Products = lazy(() => import('./Products'));
 export const Home = () => {
     const { t } = useTranslation()
     useEffect(() => {
@@ -31,20 +32,7 @@ export const Home = () => {
     const dbValue1 = collection(db, 'defaultProducts')
     const shuffledArray = shuffleArray(defProducts);
     const sliceDefProducts = shuffledArray.slice(0, 12)
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-    useEffect(() => {
-        const getdefProducts = async () => {
-            const dbVal1 = await getDocs(dbValue1)
-            setdefProducts(dbVal1.docs.map(doc => ({ ...doc.data(), id: doc.id })))
-        }
-        getdefProducts()
-    }, [])
+    const [likedProducts, setLikedProducts] = useState([]);
     const divIds = [
         uuidv4(),
         uuidv4(),
@@ -59,13 +47,14 @@ export const Home = () => {
         uuidv4(),
         uuidv4()
     ];
-    const [likedProducts, setLikedProducts] = useState([]);
-
-    useEffect(() => {
-        const storedLikedProducts = JSON.parse(localStorage.getItem('likedProducts')) || [];
-        setLikedProducts(storedLikedProducts);
-    }, []);
-
+    const [loading,setLoading] = useState(true)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
     const toggleLike = (product) => {
         const isLiked = likedProducts.some(p => p.id === product.id);
         let updatedLikedProducts = [];
@@ -79,11 +68,24 @@ export const Home = () => {
         setLikedProducts(updatedLikedProducts);
         localStorage.setItem('likedProducts', JSON.stringify(updatedLikedProducts));
     };
-
+    useEffect(() => {
+        const storedLikedProducts = JSON.parse(localStorage.getItem('likedProducts')) || [];
+        setLikedProducts(storedLikedProducts);
+    }, []);
+    useEffect(() => {
+        const getdefProducts = async () => {
+            const dbVal1 = await getDocs(dbValue1)
+            setdefProducts(dbVal1.docs.map(doc => ({ ...doc.data(), id: doc.id })))
+        }
+        getdefProducts()
+    }, [])
+    const override = {
+        display: "block",
+        margin: "0 auto",
+      };
     return (
         <>
             <div className='bg-[#f2f4f5]'>
-                {/* {contextHolder} */}
                 <div className='pb-[30px] pt-[1px] ' data-aos="zoom-in-down" data-aos-easing="linear"
                     data-aos-duration="800">
                     <div className="search-input text-center mt-[60px]">
@@ -151,31 +153,25 @@ export const Home = () => {
                 </div>
                 <>
                 </>
-
                 <div>
                     <h1 className='text-center font-[700] pt-[55px]'>Top products</h1>
-                    <div className="defaultProductsWrapper defaultProducts max-w-[1250px] m-auto flex gap-[10px] justify-center flex-wrap pt-[30px] pb-[80px]">
-                        {sliceDefProducts.map((defProduct) => {
-                            return (
-                                <>
-                                    <div className='bg-white w-[280px] rounded-md leading-none' key={defProduct.id}>
-                                        <img src={defProduct.imgUrl} alt="" className='w-[100%] max-w-[280px] h-[250px] rounded-t-md' />
-                                        <p className='text-[18px] font-medium px-[15px] mt-[10px]'>{defProduct.name}</p>
-                                        <p className='text-[#002f34] font-semibold text-[18px] px-[15px]'>{defProduct.price}$</p>
-                                        <p className='text-[14px] font-normal px-[15px]'>{defProduct.region}</p>
-                                        <p className='text-[14px] font-normal px-[15px]'>{defProduct.time}</p>
-                                        <FaRegHeart className={`float-right mt-[10px] text-[24px] mr-[20px] mb-[10px] `} style={{ color: likedProducts.some(p => p.id === defProduct.id) ? 'red' : 'grey' }}
-                                            onClick={() => toggleLike(defProduct)} />
-                                        <Link to={`/productdetail/${defProduct.id}`}><button className='btn btn-primary ml-[15px]'>View</button></Link>
-                                    </div>
-                                    <div className='d-none'>
-                                        <LikedProducts
+                    <Suspense fallback={<ScaleLoader  color="#36d7b7" size={200} cssOverride={override}/>}>
+                        <div className="defaultProductsWrapper defaultProducts max-w-[1250px] m-auto flex gap-[10px] justify-center flex-wrap pt-[30px] pb-[80px]">
+                            {sliceDefProducts.map((defProduct) => {
+                                const isLiked = likedProducts.some(p => p.id === defProduct.id);
+                                return (
+                                    <>
+                                        <Products
+                                            key={defProduct.id}
+                                            defProduct={defProduct}
+                                            isLiked={isLiked}
+                                            toggleLike={toggleLike}
                                         />
-                                    </div>
-                                </>
-                            )
-                        })}
-                    </div>
+                                    </>
+                                )
+                            })}
+                        </div>
+                    </Suspense>
                 </div>
             </div>
             <Footer />

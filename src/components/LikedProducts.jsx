@@ -1,14 +1,17 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { db } from '../firbese';
-import { doc, updateDoc } from 'firebase/firestore';
 export const LikedProducts = () => {
     const [likedProducts, setLikedProducts] = useState([]);
 
     useEffect(() => {
         const storedLikedProducts = JSON.parse(localStorage.getItem('likedProducts')) || [];
         setLikedProducts(storedLikedProducts);
-    }, []);
+      }, []);
+    const handleUnlike = (productId) => {
+        const updatedLikedProducts = likedProducts.filter(product => product.id !== productId);
+        setLikedProducts(updatedLikedProducts);
+        localStorage.setItem('likedProducts', JSON.stringify(updatedLikedProducts));
+      };
     return (
         <div>
             <div>
@@ -50,7 +53,7 @@ export const LikedProducts = () => {
                                         ${product.price}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <button href="#" class="font-medium text-red-600 dark:text-blue-500 btn btn-danger">Unlike</button>
+                                        <button href="#" class="font-medium text-red-600 dark:text-blue-500 btn btn-danger" onClick={() => handleUnlike(product.id)}>Unlike</button>
                                     </td>
                                 </tr>
                             ))}

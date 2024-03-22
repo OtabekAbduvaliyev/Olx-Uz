@@ -153,7 +153,6 @@ function App() {
           <Route path='search' element={<RequiredAuth><Search /></RequiredAuth>}></Route>
         </Routes>
       </main>
-      {/* <Footer /> */}
     </>
   )
 }
